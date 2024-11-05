@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AI-based Virtual Travel Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Optional: Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">
+            <h1>Smart Guide</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section (Search & Welcome Message) -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Welcome to Your AI Travel Assistant</h2>
+            <p>Let us help you plan the perfect trip with personalized recommendations and real-time updates.</p>
+            <form id="searchForm" class="search-form">
+                <input type="text" id="destination" placeholder="Enter destination (e.g., Paris, Tokyo)" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-content">
+            <h2>About Us</h2>
+            <p>Our AI-powered travel guide helps you discover the best travel destinations, plan your trips, and get real-time information on weather, accommodations, activities, and more!</p>
+        </div>
+    </section>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="destinations">
+        <div class="destinations-header">
+            <h2>Recommended Destinations</h2>
+        </div>
+        <div class="destination-list" id="destinationResults">
+            <!-- Dynamic destination results will be displayed here -->
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <p>&copy; 2024 Virtual Travel Guide | All Rights Reserved</p>
+        <p>Email: contact@travelguide.com</p>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
