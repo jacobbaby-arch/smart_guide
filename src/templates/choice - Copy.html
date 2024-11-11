@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .destination-image {
+            width: 200px; /* Set the desired width */
+            height: 200px; /* Set the desired height */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+            transition: transform 0.3s ease;
+        }
+        .destination-image:hover {
+            transform: scale(1.2);
+        }
+    </style>
+    <script>
+        function handleClick(region) {
+            let content = '';
+            if (region === 'asia') {
+                content = '<h2>Destinations in Asia</h2><ul>{% for destination in destinations %}{% if destination[1] == "Asia" %}<li>{{ destination[0] }}</li>{% endif %}{% endfor %}</ul>';
+            } else if (region === 'europe') {
+                content = '<h2>Destinations in Europe</h2><ul>{% for destination in destinations %}{% if destination[1] == "Europe" %}<li>{{ destination[0] }}</li>{% endif %}{% endfor %}</ul>';
+            } else if (region === 'america') {
+                content = '<h2>Destinations in America</h2><ul>{% for destination in destinations %}{% if destination[1] == "America" %}<li>{{ destination[0] }}</li>{% endif %}{% endfor %}</ul>';
+            }
+            document.getElementById('destination-list').innerHTML = content;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Trip Planner</h1>
+    </header>
+    <main>
+        <section id="button-click">
+            <h2>Select your destination?</h2>
+            <img src="{{ url_for('static', filename='images/asia.jpg') }}" alt="Asia" class="destination-image" onclick="handleClick('asia')" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename='images/europe.jpg') }}" alt="Europe" class="destination-image" onclick="handleClick('europe')" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename='images/america.jpg') }}" alt="America" class="destination-image" onclick="handleClick('america')" style="cursor: pointer;">
+        </section>
+        <section id="destination-list">
+            <h2></h2>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Travel Planner. All rights reserved.</p>
+    </footer>
+</body>
+</html>

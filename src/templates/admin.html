@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/admin">Admin</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <h1>Admin Page</h1>
+    </header>
+    <main>
+        <h2>Add Destination</h2>
+        <form action="{{ url_for('admin') }}" method="post">
+            <label for="destination_name">Destination Name:</label>
+            <input type="text" id="destination_name" name="destination_name" required>
+            <label for="country_id">Country:</label>
+            <select id="country_id" name="country_id" required>
+                {% for continent in continents %}
+                    <optgroup label="{{ continent[1] }}">
+                        {% for country in continent[2] %}
+                            <option value="{{ country[0] }}">{{ country[1] }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+            <label for="destination_image_path">Image Path:</label>
+            <input type="text" id="destination_image_path" name="destination_image_path" required>
+            <button type="submit">Add Destination</button>
+        </form>
+        <h2>Add Country</h2>
+        <form action="{{ url_for('admin') }}" method="post">
+            <label for="country_name">Country Name:</label>
+            <input type="text" id="country_name" name="country_name" required>
+            <label for="continent_id">Continent:</label>
+            <select id="continent_id" name="continent_id" required>
+                {% for continent in continents %}
+                    <option value="{{ continent[0] }}">{{ continent[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="country_image_path">Image Path:</label>
+            <input type="text" id="country_image_path" name="country_image_path" required>
+            <button type="submit">Add Country</button>
+        </form>
+        <h2>Add Continent</h2>
+        <form action="{{ url_for('admin') }}" method="post">
+            <label for="continent_name">Continent Name:</label>
+            <input type="text" id="continent_name" name="continent_name" required>
+            <label for="continent_image_path">Image Path:</label>
+            <input type="text" id="continent_image_path" name="continent_image_path" required>
+            <button type="submit">Add Continent</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Travel Planner. All rights reserved.</p>
+    </footer>
+</body>
+</html>

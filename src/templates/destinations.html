@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    {% if destinations %}
+        <h2>Destinations</h2>
+        <div class="destination-list">
+            {% for destination in destinations %}
+                <div class="destination-item">
+                    <img src="{{ url_for('static', filename=destination[1]) }}" alt="{{ destination[0] }}" class="destination-image">
+                    <p>{{ destination[0] }}</p>
+                    <a href="https://en.wikipedia.org/wiki/{{ destination[0] }}" target="_blank">Learn more on Wikipedia</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No destinations found.</p>
+    {% endif %}
+</body>
+</html>

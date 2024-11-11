@@ -1,0 +1,15 @@
+{% if countries %}
+    <h2>Countries</h2>
+    <div class="country-list">
+        {% for country in countries %}
+            <div class="country-item">
+                <a href="{{ url_for('destinations', country_id=country[0]) }}">
+                    <img src="{{ url_for('static', filename=country[2]) }}" alt="{{ country[1] }}" class="country-image">
+                    <p>{{ country[1] }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No countries found.</p>
+{% endif %}

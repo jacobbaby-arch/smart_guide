@@ -1,0 +1,89 @@
+body {
+    background-image: url('/static/images/background.png'); /* Path to your background image */
+    background-size: auto; /* Ensure the image covers the entire background */
+    background-position: center; /* Center the background image */
+    background-repeat: repeat; /* Prevent the background image from repeating */
+    font-family: Arial, sans-serif; /* Set a default font */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #1491e4; /* Windows 11 blue color */
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+    border-radius: 8px; /* Rounded corners */
+    margin: 10px; /* Margin around the navbar */
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    border-radius: 4px; /* Rounded corners for links */
+}
+
+.navbar a:hover {
+    background-color: #005A9E; /* Darker blue on hover */
+    color: white;
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.continent-image {
+    width: 150px; /* Set the desired width */
+    height: 150px; /* Set the desired height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    transition: transform 0.3s ease;
+}
+
+.continent-image:hover {
+    transform: scale(1.2);
+}
+
+.country-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+}
+
+.country-item {
+    text-align: center;
+    flex: 0 0 auto;
+}
+
+.country-image {
+    width: 150px; /* Set the desired width */
+    height: 150px; /* Set the desired height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    transition: transform 0.3s ease;
+}
+
+.country-image:hover {
+    transform: scale(1.2);
+}
+
+.destination-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.destination-item {
+    text-align: center;
+}
+
+.destination-image {
+    width: 150px; /* Set the desired width */
+    height: 150px; /* Set the desired height */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    transition: transform 0.3s ease;
+}
+
+.destination-image:hover {
+    transform: scale(1.2);
+}
