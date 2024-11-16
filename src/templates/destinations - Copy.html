@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function showAttractions(destinationId) {
+            fetch(`/attractions/${destinationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const attractionsList = document.getElementById('attractions-list');
+                    attractionsList.innerHTML = '';
+                    data.attractions.forEach(attraction => {
+                        const attractionItem = document.createElement('div');
+                        attractionItem.className = 'attraction-item';
+                        attractionItem.innerHTML = `
+                            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(attraction.name)}" target="_blank">
+                                <img src="/static/${attraction.image_path}" alt="${attraction.name}" class="attraction-image">
+                            </a>
+                            <h3>${attraction.name}</h3>
+                            <p>${attraction.description}</p>
+                        `;
+                        attractionsList.appendChild(attractionItem);
+                    });
+                });
+        }
+
+        function showHotels(destinationId) {
+            fetch(`/hotels/${destinationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const hotelsList = document.getElementById('hotels-list');
+                    hotelsList.innerHTML = '';
+                    data.hotels.forEach(hotel => {
+                        const hotelItem = document.createElement('div');
+                        hotelItem.className = 'hotel-item';
+                        hotelItem.innerHTML = `
+                            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(hotel.name)}" target="_blank">
+                                <img src="/static/${hotel.image_path}" alt="${hotel.name}" class="hotel-image">
+                            </a>
+                            <h3>${hotel.name}</h3>
+                            <p>${hotel.description}</p>
+                        `;
+                        hotelsList.appendChild(hotelItem);
+                    });
+                });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/admin">Admin</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <h1>Destinations</h1>
+    </header>
+    <main>
+        {% if destinations %}
+            <h2>Destinations</h2>
+            <div class="destination-list">
+                {% for destination in destinations %}
+                    <div class="destination-item">
+                        <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }}); showHotels({{ destination[0] }});" style="cursor: pointer;">
+                        <p>{{ destination[1] }}</p>
+                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">Learn more on Wikipedia</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No destinations found.</p>
+        {% endif %}
+        <section id="attractions-section">
+            <h2>Attractions</h2>
+            <div id="attractions-list"></div>
+        </section>
+        <section id="hotels-section">
+            <h2>Hotels</h2>
+            <div id="hotels-list"></div>
+        </section>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

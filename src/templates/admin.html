@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!--<style>
+        .submenu {
+            display: none;
+        }
+        .submenu.active {
+            display: block;
+        }
+        .submenu-nav a {
+            margin-right: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+        }
+    </style>-->
+    <script>
+        function showSubMenu(subMenuId) {
+            document.querySelectorAll('.submenu').forEach(subMenu => {
+                subMenu.classList.remove('active');
+            });
+            document.getElementById(subMenuId).classList.add('active');
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -14,52 +36,85 @@
             <a href="/about">About</a>
             <a href="/contact">Contact</a>
         </nav>
-        <h1>Admin Page</h1>
+        <!--<h1>Admin Page</h1>-->
     </header>
     <main>
-        <h2>Add Destination</h2>
-        <form action="{{ url_for('admin') }}" method="post">
-            <label for="destination_name">Destination Name:</label>
-            <input type="text" id="destination_name" name="destination_name" required>
-            <label for="country_id">Country:</label>
-            <select id="country_id" name="country_id" required>
-                {% for continent in continents %}
-                    <optgroup label="{{ continent[1] }}">
-                        {% for country in continent[2] %}
-                            <option value="{{ country[0] }}">{{ country[1] }}</option>
-                        {% endfor %}
-                    </optgroup>
+        <div class="submenu-nav">
+            <a onclick="showSubMenu('add-continent')">Add Continent</a>
+            <a onclick="showSubMenu('add-country')">Add Country</a>
+            <a onclick="showSubMenu('add-destination')">Add Destination</a>
+            <a onclick="showSubMenu('add-attraction')">Add Attraction</a>
+        </div>
+        <div id="add-continent" class="submenu">
+            <h2>Add Continent</h2>
+            <form action="{{ url_for('admin') }}" method="post">
+                <label for="continent_name">Continent Name:</label>
+                <input type="text" id="continent_name" name="continent_name" required>
+                <label for="continent_image_path">Image Path:</label>
+                <input type="text" id="continent_image_path" name="continent_image_path" required>
+                <button type="submit">Add Continent</button>
+            </form>
+        </div>
+        <div id="add-country" class="submenu">
+            <h2>Add Country</h2>
+            <form action="{{ url_for('admin') }}" method="post">
+                <label for="country_name">Country Name:</label>
+                <input type="text" id="country_name" name="country_name" required>
+                <label for="continent_id">Continent:</label>
+                <select id="continent_id" name="continent_id" required>
+                    {% for continent in continents %}
+                        <option value="{{ continent[0] }}">{{ continent[1] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="country_image_path">Image Path:</label>
+                <input type="text" id="country_image_path" name="country_image_path" required>
+                <button type="submit">Add Country</button>
+            </form>
+        </div>
+        <div id="add-destination" class="submenu">
+            <h2>Add Destination</h2>
+            <form action="{{ url_for('admin') }}" method="post">
+                <label for="destination_name">Destination Name:</label>
+                <input type="text" id="destination_name" name="destination_name" required>
+                <label for="country_id">Country:</label>
+                <select id="country_id" name="country_id" required>
+                    {% for country in countries %}
+                        <option value="{{ country[0] }}">{{ country[1] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="destination_image_path">Image Path:</label>
+                <input type="text" id="destination_image_path" name="destination_image_path" required>
+                <button type="submit">Add Destination</button>
+            </form>
+        </div>
+        <div id="add-attraction" class="submenu">
+            <h2>Add Attraction</h2>
+            <form action="{{ url_for('admin') }}" method="post">
+                <label for="attraction_name">Attraction Name:</label>
+                <input type="text" id="attraction_name" name="attraction_name" required>
+                <label for="attraction_description">Description:</label>
+                <textarea id="attraction_description" name="attraction_description" required></textarea>
+                <label for="destination_id">Destination:</label>
+                <select id="destination_id" name="destination_id" required>
+                    {% for destination in destinations %}
+                        <option value="{{ destination[0] }}">{{ destination[1] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="attraction_image_path">Image Path:</label>
+                <input type="text" id="attraction_image_path" name="attraction_image_path" required>
+                <button type="submit">Add Attraction</button>
+            </form>
+        </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
                 {% endfor %}
-            </select>
-            <label for="destination_image_path">Image Path:</label>
-            <input type="text" id="destination_image_path" name="destination_image_path" required>
-            <button type="submit">Add Destination</button>
-        </form>
-        <h2>Add Country</h2>
-        <form action="{{ url_for('admin') }}" method="post">
-            <label for="country_name">Country Name:</label>
-            <input type="text" id="country_name" name="country_name" required>
-            <label for="continent_id">Continent:</label>
-            <select id="continent_id" name="continent_id" required>
-                {% for continent in continents %}
-                    <option value="{{ continent[0] }}">{{ continent[1] }}</option>
-                {% endfor %}
-            </select>
-            <label for="country_image_path">Image Path:</label>
-            <input type="text" id="country_image_path" name="country_image_path" required>
-            <button type="submit">Add Country</button>
-        </form>
-        <h2>Add Continent</h2>
-        <form action="{{ url_for('admin') }}" method="post">
-            <label for="continent_name">Continent Name:</label>
-            <input type="text" id="continent_name" name="continent_name" required>
-            <label for="continent_image_path">Image Path:</label>
-            <input type="text" id="continent_image_path" name="continent_image_path" required>
-            <button type="submit">Add Continent</button>
-        </form>
+            </div>
+        {% endif %}
+    {% endwith %}
     </main>
-    <footer>
-        <p>&copy; 2024 Travel Planner. All rights reserved.</p>
-    </footer>
+    {% include 'footer.html' %}
 </body>
 </html>

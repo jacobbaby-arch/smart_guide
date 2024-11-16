@@ -5,37 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        .navbar {
-            display: flex;
-            justify-content: space-around;
-            background-color: #007BFF; /* Blue color */
-            padding: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s, color 0.3s, transform 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 3D effect */
-        }
-        .navbar a:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-            color: white;
-            transform: translateY(-2px); /* Lift effect */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
-        }
-        .continent-image {
-            width: 150px; /* Set the desired width */
-            height: 150px; /* Set the desired height */
-            object-fit: cover; /* Ensure the image covers the area without distortion */
-            transition: transform 0.3s ease;
-        }
-        .continent-image:hover {
-            transform: scale(1.2);
-        }
-    </style>
     <script>
         function handleClick(continentId) {
             fetch(`/countries/${continentId}`)
@@ -59,16 +28,19 @@
     <main>
         <section id="button-click">
             <h2>Select the continent to proceed:</h2>
-            {% for continent in continents %}
-                <img src="{{ url_for('static', filename=continent[2]) }}" alt="{{ continent[1] }}" class="continent-image" onclick="handleClick({{ continent[0] }})" style="cursor: pointer;">
-            {% endfor %}
+            <div class="continent-list">
+                {% for continent in continents %}
+                    <div class="continent-item" onclick="handleClick({{ continent[0] }})" style="cursor: pointer;">
+                        <img src="{{ url_for('static', filename=continent[2]) }}" alt="{{ continent[1] }}" class="continent-image">
+                        <p class="continent-name">{{ continent[1] }}</p>
+                    </div>
+                {% endfor %}
+            </div>
         </section>
         <section id="country-list">
             <h2></h2>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2024 Travel Planner. All rights reserved.</p>
-    </footer>
+    {% include 'footer.html' %}
 </body>
 </html>

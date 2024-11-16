@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Attractions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/admin">Admin</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <h1>Travel Attractions in {{ destination_name }}</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Top Attractions</h2>
+            <div class="attraction-list">
+                {% for attraction in attractions %}
+                    <div class="attraction-item">
+                        <img src="{{ url_for('static', filename=attraction[2]) }}" alt="{{ attraction[0] }}" class="attraction-image">
+                        <h3>{{ attraction[0] }}</h3>
+                        <p>{{ attraction[1] }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+    {% include 'footer.html' %}
+</body>
+</html>

@@ -14,7 +14,7 @@
             <a href="/about">About</a>
             <a href="/contact">Contact</a>
         </nav>
-        <h1>Contact Us</h1>
+        <!--<h1>Contact Us</h1>-->
     </header>
     <main>
         <section>
@@ -27,12 +27,11 @@
                 <input type="email" id="email" name="email" required>
                 <label for="message">Message:</label>
                 <textarea id="message" name="message" required></textarea>
+                <p></p>
                 <button type="submit">Send Message</button>
             </form>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2024 Travel Planner. All rights reserved.</p>
-    </footer>
+    {% include 'footer.html' %}
 </body>
 </html>

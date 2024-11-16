@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destinations</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        a{
-        text-decoration: none
-      }
-    </style>
     <script>
         function showAttractions(destinationId) {
             fetch(`/attractions/${destinationId}`)
@@ -32,6 +25,8 @@
                         attractionsList.appendChild(attractionItem);
                     });
                 });
+        }
+
             fetch(`/itineraries/${destinationId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -46,14 +41,26 @@
                         itineraryDetails.appendChild(itineraryItem);
                     });
                 });
-        }
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section.style.display === 'none') {
-                section.style.display = 'block';
-            } else {
-                section.style.display = 'none';
-            }
+    	
+        function showHotels(destinationId) {
+            fetch(`/hotels/${destinationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const hotelsList = document.getElementById('hotels-list');
+                    hotelsList.innerHTML = '';
+                    data.hotels.forEach(hotel => {
+                        const hotelItem = document.createElement('div');
+                        hotelItem.className = 'hotel-item';
+                        hotelItem.innerHTML = `
+                            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(hotel.name)}" target="_blank">
+                                <img src="/static/${hotel.image_path}" alt="${hotel.name}" class="hotel-image">
+                            </a>
+                            <h3>${hotel.name}</h3>
+                            <p>${hotel.description}</p>
+                        `;
+                        hotelsList.appendChild(hotelItem);
+                    });
+                });
         }
     </script>
 </head>
@@ -70,27 +77,12 @@
     <main>
         {% if destinations %}
             <h2>Destinations</h2>
-            <p>Click on the desired destination</p>
             <div class="destination-list">
                 {% for destination in destinations %}
                     <div class="destination-item">
                         <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }})" style="cursor: pointer;">
-                        <p>{{ destination[1] }}
-                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/wiki.png" alt= About {{ destination[1] }} class="icon-image">
-                        </a>
-                        <a href="https://www.google.com/search?q=hotels+in+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/hotel.png" alt= Search Hotels class="icon-image">
-                        </a>
-                        <a href="https://www.google.com/search?q=flights+to+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/flights.png" alt= Search Hotels class="icon-image">
-                        </a>
-                        <a href="https://www.google.com/search?q=local+attractions+in+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/attractions.png" alt= Search Hotels class="icon-image">
-                        </a>
-                    </P>
-                        <!--<a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank"class="hotel-search-button">About {{ destination[1] }}</a>
-                        <a href="https://www.google.com/search?q=hotels+in+{{ destination[1] }}" target="_blank" class="hotel-search-button">Search Hotels</a>-->
+                        <p>{{ destination[1] }}</p>
+                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">Learn more on Wikipedia</a>
                     </div>
                 {% endfor %}
             </div>
@@ -98,10 +90,9 @@
             <p>No destinations found.</p>
         {% endif %}
         <section id="itinerary-section">
-                <h2>Itinerary Details</h2>
-                <div id="itinerary-details"></div>
+            <h2>Itinerary Details</h2>
+            <div id="itinerary-details"></div>
         </section>
-        <!--<button onclick="toggleSection('attractions-section')">></button>-->
         <section id="attractions-section">
             <h2>Attractions</h2>
             <div id="attractions-list"></div>

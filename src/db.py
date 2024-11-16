@@ -39,6 +39,17 @@ CREATE TABLE IF NOT EXISTS destinations (
 )
 ''')
 
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS attractions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    image_path TEXT,
+    destination_id INTEGER,
+    FOREIGN KEY (destination_id) REFERENCES destinations (id)
+)
+''')
+
 # Insert initial data into continents table
 continents = [
     ('Asia', 'images/asia.jpg'),
@@ -86,6 +97,24 @@ cursor.executemany('''
 INSERT INTO destinations (name, country_id, image_path)
 VALUES (?, ?, ?)
 ''', destinations)
+
+# Insert initial data into attractions table
+attractions = [
+    ('Tokyo Tower', 'A communications and observation tower in the Shiba-koen district of Minato, Tokyo, Japan.', 'images/tokyo_tower.jpg', 1),
+    ('Great Wall of China', 'A series of fortifications made of stone, brick, tamped earth, wood, and other materials.', 'images/great_wall_of_china.jpg', 2),
+    ('Grand Palace', 'A complex of buildings at the heart of Bangkok, Thailand.', 'images/grand_palace.jpg', 3),
+    ('Eiffel Tower', 'A wrought-iron lattice tower on the Champ de Mars in Paris, France.', 'images/eiffel_tower.jpg', 4),
+    ('Brandenburg Gate', 'An 18th-century neoclassical monument in Berlin, Germany.', 'images/brandenburg_gate.jpg', 5),
+    ('Colosseum', 'An ancient amphitheater in Rome, Italy.', 'images/colosseum.jpg', 6),
+    ('Statue of Liberty', 'A colossal neoclassical sculpture on Liberty Island in New York Harbor.', 'images/statue_of_liberty.jpg', 7),
+    ('CN Tower', 'A 553.3 m-high concrete communications and observation tower in downtown Toronto, Ontario, Canada.', 'images/cn_tower.jpg', 8),
+    ('Christ the Redeemer', 'An Art Deco statue of Jesus Christ in Rio de Janeiro, Brazil.', 'images/christ_the_redeemer.jpg', 9)
+]
+
+cursor.executemany('''
+INSERT INTO attractions (name, description, image_path, destination_id)
+VALUES (?, ?, ?, ?)
+''', attractions)
 
 # Commit the changes and close the connection
 conn.commit()
