@@ -1,3 +1,27 @@
+@app.route('/itinerary/<int:destination_id>')
+def itinerary(destination_id):
+    destination_name = get_destination_name(destination_id)
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=f"Create a 3-day itinerary for a trip to {destination_name}.",
+        max_tokens=150
+    )
+    itinerary = response.choices[0].text.strip()
+    return jsonify({'itinerary': itinerary})
+
+def get_destination_name(destination_id):
+    db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM destinations WHERE id = ?', (destination_id,))
+    destination = cursor.fetchone()
+    conn.close()
+    return destination[0] if destination else None
+	
+	
+	
+	
+	
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +71,24 @@
                     });
                 });
         }
+
+        function getItinerary(destinationId) {
+            fetch(`/itinerary/${destinationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const itineraryDetails = document.getElementById('itinerary-details');
+                    itineraryDetails.innerHTML = `<p>${data.itinerary}</p>`;
+                });
+        }
+
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
     </script>
 </head>
 <body>
@@ -67,16 +109,26 @@
                     <div class="destination-item">
                         <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }}); showHotels({{ destination[0] }});" style="cursor: pointer;">
                         <p>{{ destination[1] }}</p>
-                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">Learn more on Wikipedia</a>
+                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank" class="icon-link">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="https://www.google.com/search?q=hotels+in+{{ destination[1] }}" target="_blank" class="hotel-search-button">Search Hotels</a>
+                        <button onclick="getItinerary({{ destination[0] }})">Get Itinerary</button>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
             <p>No destinations found.</p>
         {% endif %}
-        <section id="attractions-section">
+        <button onclick="toggleSection('attractions-section')">Toggle Attractions</button>
+        <section id="attractions-section" style="display: none;">
             <h2>Attractions</h2>
             <div id="attractions-list"></div>
+        </section>
+        <button onclick="toggleSection('itinerary-section')">Toggle Itinerary Details</button>
+        <section id="itinerary-section" style="display: none;">
+            <h2>Itinerary Details</h2>
+            <div id="itinerary-details"></div>
         </section>
         <section id="hotels-section">
             <h2>Hotels</h2>

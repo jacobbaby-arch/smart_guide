@@ -25,8 +25,6 @@
                         attractionsList.appendChild(attractionItem);
                     });
                 });
-        }
-
             fetch(`/itineraries/${destinationId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -36,31 +34,19 @@
                         const itineraryItem = document.createElement('div');
                         itineraryItem.className = 'itinerary-item';
                         itineraryItem.innerHTML = `
-                            <p>Day ${itinerary.day}:${itinerary.description}</p>
+                            <p>${itinerary.day} Day Trip: ${itinerary.description}</p>
                         `;
                         itineraryDetails.appendChild(itineraryItem);
                     });
                 });
-    	
-        function showHotels(destinationId) {
-            fetch(`/hotels/${destinationId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const hotelsList = document.getElementById('hotels-list');
-                    hotelsList.innerHTML = '';
-                    data.hotels.forEach(hotel => {
-                        const hotelItem = document.createElement('div');
-                        hotelItem.className = 'hotel-item';
-                        hotelItem.innerHTML = `
-                            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(hotel.name)}" target="_blank">
-                                <img src="/static/${hotel.image_path}" alt="${hotel.name}" class="hotel-image">
-                            </a>
-                            <h3>${hotel.name}</h3>
-                            <p>${hotel.description}</p>
-                        `;
-                        hotelsList.appendChild(hotelItem);
-                    });
-                });
+        }
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
         }
     </script>
 </head>
@@ -77,12 +63,26 @@
     <main>
         {% if destinations %}
             <h2>Destinations</h2>
+            <p>Click on the desired destination</p>
             <div class="destination-list">
                 {% for destination in destinations %}
                     <div class="destination-item">
                         <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }})" style="cursor: pointer;">
-                        <p>{{ destination[1] }}</p>
-                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">Learn more on Wikipedia</a>
+                        <p>{{ destination[1] }}
+                        <p> </p>
+                        <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">
+                            <img src="/static/images/wiki.png" alt= About {{ destination[1] }} class="icon-image">
+                        </a>
+                        <a href="https://www.google.com/search?q=hotels+in+{{ destination[1] }}" target="_blank">
+                            <img src="/static/images/hotel.png" alt= Search Hotels class="icon-image">
+                        </a>
+                        <a href="https://www.google.com/search?q=flights+to+{{ destination[1] }}" target="_blank">
+                            <img src="/static/images/flights.png" alt= Search Hotels class="icon-image">
+                        </a>
+                        <a href="https://www.google.com/search?q=local+attractions+in+{{ destination[1] }}" target="_blank">
+                            <img src="/static/images/attractions.png" alt= Search Hotels class="icon-image">
+                        </a>
+                    </P>
                     </div>
                 {% endfor %}
             </div>
@@ -93,6 +93,7 @@
             <h2>Itinerary Details</h2>
             <div id="itinerary-details"></div>
         </section>
+        <!--<button onclick="toggleSection('attractions-section')">></button>-->
         <section id="attractions-section">
             <h2>Attractions</h2>
             <div id="attractions-list"></div>

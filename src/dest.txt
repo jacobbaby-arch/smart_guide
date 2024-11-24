@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destinations</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        a{
-        text-decoration: none
-      }
-    </style>
     <script>
         function showAttractions(destinationId) {
             fetch(`/attractions/${destinationId}`)
                 .then(response => response.json())
                 .then(data => {
+                    const attractionsSection = document.getElementById('attractions-section');
                     const attractionsList = document.getElementById('attractions-list');
+                    attractionsSection.style.display = 'block';
                     attractionsList.innerHTML = '';
                     data.attractions.forEach(attraction => {
                         const attractionItem = document.createElement('div');
@@ -32,21 +27,8 @@
                         attractionsList.appendChild(attractionItem);
                     });
                 });
-            fetch(`/itineraries/${destinationId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const itineraryDetails = document.getElementById('itinerary-details');
-                    itineraryDetails.innerHTML = '';
-                    data.itineraries.forEach(itinerary => {
-                        const itineraryItem = document.createElement('div');
-                        itineraryItem.className = 'itinerary-item';
-                        itineraryItem.innerHTML = `
-                            <p>${itinerary.day} Day Trip :${itinerary.description}</p>
-                        `;
-                        itineraryDetails.appendChild(itineraryItem);
-                    });
-                });
         }
+
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
             if (section.style.display === 'none') {
@@ -55,6 +37,7 @@
                 section.style.display = 'none';
             }
         }
+
         function showItinerary(destinationId) {
             fetch(`/itinerary/${destinationId}`)
                 .then(response => response.json())
@@ -84,7 +67,7 @@
             <a href="/about">About</a>
             <a href="/contact">Contact</a>
         </nav>
-        <!--<h1>Destinations</h1>-->
+        <h1>Destinations</h1>
     </header>
     <main>
         {% if destinations %}
@@ -93,39 +76,42 @@
             <div class="destination-list">
                 {% for destination in destinations %}
                     <div class="destination-item">
-                        <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }})" style="cursor: pointer;">
+                        <img src="{{ url_for('static', filename=destination[2]) }}" alt="{{ destination[1] }}" class="destination-image" onclick="showAttractions({{ destination[0] }}); showHotels({{ destination[0] }}); showItinerary({{ destination[0] }});" style="cursor: pointer;">
                         <p>{{ destination[1] }}
-                        <p> </p>
                         <a href="https://en.wikipedia.org/wiki/{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/wiki.png" alt= About {{ destination[1] }} class="icon-image">
+                            <img src="/static/images/wiki.png" alt="About {{ destination[1] }}" class="icon-image">
                         </a>
                         <a href="https://www.google.com/search?q=hotels+in+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/hotel.png" alt= Search Hotels class="icon-image">
+                            <img src="/static/images/hotel.png" alt="Search Hotels" class="icon-image">
                         </a>
                         <a href="https://www.google.com/search?q=flights+to+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/flights.png" alt= Search Hotels class="icon-image">
+                            <img src="/static/images/flights.png" alt="Search Flights" class="icon-image">
                         </a>
                         <a href="https://www.google.com/search?q=local+attractions+in+{{ destination[1] }}" target="_blank">
-                            <img src="/static/images/attractions.png" alt= Search Hotels class="icon-image">
+                            <img src="/static/images/attractions.png" alt="Search Attractions" class="icon-image">
                         </a>
-                    </P>
-
                     </div>
                 {% endfor %}
             </div>
         {% else %}
             <p>No destinations found.</p>
         {% endif %}
-        <section id="itinerary-section">
-                <h2>Itinerary Details</h2>
-                <div id="itinerary-details"></div>
-        </section>
-        <!--<button onclick="toggleSection('attractions-section')">></button>-->
-        <section id="attractions-section">
-            <h2>Main Attractions</h2>
+        <button onclick="toggleSection('attractions-section')">Toggle Attractions</button>
+        <section id="attractions-section" style="display: none;">
+            <h2>Attractions</h2>
             <div id="attractions-list"></div>
+        </section>
+        <button onclick="toggleSection('itinerary-section')">Toggle Itinerary Details</button>
+        <section id="itinerary-section" style="display: none;">
+            <h2>Itinerary Details</h2>
+            <div id="itinerary-details" class="itinerary-columns"></div>
+        </section>
+        <section id="hotels-section">
+            <h2>Hotels</h2>
+            <div id="hotels-list"></div>
         </section>
     </main>
     {% include 'footer.html' %}
 </body>
 </html>
+

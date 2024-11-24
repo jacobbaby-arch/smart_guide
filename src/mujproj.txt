@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
+import openai
 import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 
-ADMIN_PASSCODE = '1234'  # Replace with your actual passcode
+# Set your OpenAI API key
+openai.api_key = 'your_openai_api_key'  # Replace with your actual OpenAI API key
 
 def get_continents():
     db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
@@ -60,24 +61,6 @@ def get_destinations_by_country(country_id):
     conn.close()
     return destinations
 
-def get_all_countries_and_destinations():
-    db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute('''
-        SELECT countries.id, countries.name, destinations.id, destinations.name
-        FROM countries
-        JOIN destinations ON countries.id = destinations.country_id
-    ''')
-    data = cursor.fetchall()
-    countries = {}
-    for country_id, country_name, destination_id, destination_name in data:
-        if country_id not in countries:
-            countries[country_id] = [country_name, []]
-        countries[country_id][1].append((destination_id, destination_name))
-    conn.close()
-    return countries
-    
 def get_attractions_by_destination(destination_id):
     db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
     conn = sqlite3.connect(db_path)
@@ -91,18 +74,18 @@ def get_attractions_by_destination(destination_id):
     conn.close()
     return attractions
 
-def get_itineraries_by_destination(destination_id):
+def get_hotels_by_destination(destination_id):
     db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
-        SELECT day, description
-        FROM itineraries
+        SELECT name, description, image_path
+        FROM hotels
         WHERE destination_id = ?
     ''', (destination_id,))
-    itineraries = cursor.fetchall()
+    hotels = cursor.fetchall()
     conn.close()
-    return itineraries
+    return hotels
 
 @app.route('/')
 def index():
@@ -124,17 +107,37 @@ def attractions(destination_id):
     attractions = get_attractions_by_destination(destination_id)
     return jsonify({'attractions': [{'name': attraction[0], 'description': attraction[1], 'image_path': attraction[2]} for attraction in attractions]})
 
-@app.route('/itineraries/<int:destination_id>')
-def itineraries(destination_id):
-    itineraries = get_itineraries_by_destination(destination_id)
-    return jsonify({'itineraries': [{'day': itinerary[0], 'description': itinerary[1]} for itinerary in itineraries]})
+@app.route('/hotels/<int:destination_id>')
+def hotels(destination_id):
+    hotels = get_hotels_by_destination(destination_id)
+    return jsonify({'hotels': [{'name': hotel[0], 'description': hotel[1], 'image_path': hotel[2]} for hotel in hotels]})
+
+@app.route('/itinerary/<int:destination_id>')
+def itinerary(destination_id):
+    destination_name = get_destination_name(destination_id)
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=f"Create a 3-day itinerary for a trip to {destination_name}.",
+        max_tokens=150
+    )
+    itinerary = response.choices[0].text.strip()
+    return jsonify({'itinerary': itinerary})
+
+def get_destination_name(destination_id):
+    db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM destinations WHERE id = ?', (destination_id,))
+    destination = cursor.fetchone()
+    conn.close()
+    return destination[0] if destination else None
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         if 'passcode' in request.form:
             passcode = request.form['passcode']
-            if passcode == ADMIN_PASSCODE:
+            if passcode == 'your_admin_passcode':  # Replace with your actual passcode
                 session['admin_authenticated'] = True
                 return redirect(url_for('admin'))
             else:
@@ -199,20 +202,6 @@ def admin():
             conn.commit()
             conn.close()
             flash('Attraction added successfully!')
-        elif 'itinerary_day' in request.form and 'itinerary_description' in request.form and 'destination_id' in request.form:
-            itinerary_day = request.form['itinerary_day']
-            itinerary_description = request.form['itinerary_description']
-            destination_id = request.form['destination_id']
-            db_path = os.path.join(os.path.dirname(__file__), 'src/db', 'trip_planner.db')
-            conn = sqlite3.connect(db_path)
-            cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO itineraries (day, description, destination_id)
-                VALUES (?, ?, ?)
-            ''', (itinerary_day, itinerary_description, destination_id))
-            conn.commit()
-            conn.close()
-            flash('Itinerary added successfully!')
         return redirect(url_for('admin'))
     if not session.get('admin_authenticated'):
         return render_template('admin_login.html')
@@ -220,7 +209,7 @@ def admin():
     countries = get_countries()
     destinations = get_destinations()
     all_countries_and_destinations = get_all_countries_and_destinations()
-    #session.pop('admin_authenticated', None)  # Clear the session variable after each request
+    session.pop('admin_authenticated', None)  # Clear the session variable after each request
     return render_template('admin.html', continents=continents, countries=countries, destinations=destinations, all_countries_and_destinations=all_countries_and_destinations)
 
 @app.route('/about')

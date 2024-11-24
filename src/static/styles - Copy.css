@@ -135,34 +135,20 @@ body {
 main {
     padding: 20px; /* Add padding to the main content */
 }
-
-#itinerary-section {
-    margin-top: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
-    padding: 20px;
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-}
-
-#itinerary-details {
+.itinerary-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.day-item {
-    flex: 1 1 calc(33.333% - 20px); /* Three columns with gap */
-    background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+#itinerary-section {
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-top: 20px;
     padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-    text-align: center;
-    border: 2px solid #007BFF;
-    border-color: #007BFF;
     border-radius: 8px; /* Rounded corners */
-}
-
-#itinerary-details p {
-    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 #attractions-section {

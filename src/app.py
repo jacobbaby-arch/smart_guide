@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import sqlite3
 import os
+import openai
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
 
 ADMIN_PASSCODE = '1234'  # Replace with your actual passcode
+
 
 def get_continents():
     db_path = os.path.join(os.path.dirname(__file__), 'db', 'trip_planner.db')
