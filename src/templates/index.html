@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trip Planner</title>
+    <title>Smart Guide</title>
+    <style>
+        .tab {
+            display: inline-block;
+            margin-left: 20px;
+        }
+    </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         function handleClick(continentId) {
@@ -23,11 +29,12 @@
             <a href="/about">About</a>
             <a href="/contact">Contact</a>
         </nav>
-        <h1>Trip Planner</h1>
+        <h1 style="color: Green"><span class="tab"></span>Smart Guide</h1>
+        <h4 style="color: brown"><span class="tab"></span>The AI-based Virtual Travel Guide</h4>
     </header>
     <main>
         <section id="button-click">
-            <h2>Select the continent to proceed:</h2>
+            <h2 style="color: Orange">Select the continent to proceed:</h2>
             <div class="continent-list">
                 {% for continent in continents %}
                     <div class="continent-item" onclick="handleClick({{ continent[0] }})" style="cursor: pointer;">
